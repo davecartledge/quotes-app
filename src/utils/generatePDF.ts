@@ -8,7 +8,10 @@ export async function generatePDF(quoteElement: HTMLElement | null): Promise<voi
     quoteElement.querySelectorAll(".hide-on-pdf")
   ) as HTMLElement[];
 
-  excludeFromPDF.forEach(el => el.style.display === "none");
+  // Force hide elements with !important
+  excludeFromPDF.forEach(el => {
+    el.style.cssText = "display: none !important";
+  });
 
   const canvas = await html2canvas(quoteElement, {
     scale: 2,
@@ -20,5 +23,8 @@ export async function generatePDF(quoteElement: HTMLElement | null): Promise<voi
   pdf.addImage(imgData, "PNG", 10, 10, 190, 0);
   pdf.save("quote.pdf");
 
-  excludeFromPDF.forEach(el => el.style.display === "");
+  // Reset styles
+  excludeFromPDF.forEach(el => {
+    el.style.cssText = "";
+  });
 }
